@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+@media (pointer: fine) {
+  html,
+  body,
+  #root,
+  #root * {
+    cursor: none !important;
+  }
+}
