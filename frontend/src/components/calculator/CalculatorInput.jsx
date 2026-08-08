@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Input } from "../ui/input";
 
 export default function CalculatorInput({ label, value, onChange, placeholder, type = "text" }) {

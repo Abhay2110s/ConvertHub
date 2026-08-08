@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Calculator, RefreshCcw } from "lucide-react";
-import { motion } from "framer-motion";
+import { ArrowRight, RefreshCcw, ChevronDown } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { convert as convertUnit } from "../engines/unitEngine";
 import { calculate as calculateFinance } from "../engines/financeEngine";
 import { calculate as calculateDate } from "../engines/dateEngine";
 import { calculate as calculateEveryday } from "../engines/everydayEngine";
 import CalculatorLayout from "../components/calculator/CalculatorLayout";
+import { formatNumber } from "../utils/formatter";
 
 const UNIT_OPTIONS = {
   length:[["meter","Meter"],["kilometer","Kilometer"],["centimeter","Centimeter"],["millimeter","Millimeter"],["mile","Mile"],["yard","Yard"],["foot","Foot"],["inch","Inch"]],
@@ -66,22 +67,77 @@ const CONFIG = {
 };
 
 function Field({label,value,onChange,type="number",placeholder}) {
-  return <label className="block"><span className="mb-2 block text-xs font-black uppercase tracking-wider text-zinc-500">{label}</span><input type={type} value={value ?? ""} onChange={e=>onChange(e.target.value)} placeholder={placeholder} className="w-full border-[3px] border-black bg-white px-4 py-3 font-bold outline-none focus:shadow-[4px_4px_0px_#8B5CF6]"/></label>;
+  return (
+    <label className="block min-w-0">
+      <span className="mb-2 block text-xs font-black uppercase tracking-wider text-zinc-500">
+        {label}
+      </span>
+      <input
+        type={type}
+        inputMode={type === "number" ? "decimal" : undefined}
+        step={type === "number" ? "any" : undefined}
+        value={value ?? ""}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="
+          h-12 w-full min-w-0 border-[3px] border-black bg-white
+          px-4 py-3 font-bold outline-none transition
+          placeholder:text-zinc-400
+          focus:translate-y-[-1px]
+          focus:shadow-[4px_4px_0px_#8B5CF6]
+        "
+      />
+    </label>
+  );
 }
+
 function SelectField({label,value,onChange,options}) {
-  return <label className="block"><span className="mb-2 block text-xs font-black uppercase tracking-wider text-zinc-500">{label}</span><select value={value} onChange={e=>onChange(e.target.value)} className="w-full border-[3px] border-black bg-white px-4 py-3 font-bold outline-none focus:shadow-[4px_4px_0px_#8B5CF6]">{options.map(([id,name])=><option key={id} value={id}>{name}</option>)}</select></label>;
+  return (
+    <label className="block min-w-0">
+      <span className="mb-2 block text-xs font-black uppercase tracking-wider text-zinc-500">
+        {label}
+      </span>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          className="
+            h-12 w-full min-w-0 appearance-none border-[3px] border-black
+            bg-[#FFF8EC] px-4 pr-11 py-3 font-black text-black outline-none
+            transition cursor-pointer
+            hover:-translate-y-0.5 hover:bg-[#FDE047]
+            focus:translate-y-[-1px]
+            focus:bg-white
+            focus:shadow-[4px_4px_0px_#8B5CF6]
+          "
+        >
+          {options.map(([id,name]) => (
+            <option key={id} value={id}>{name}</option>
+          ))}
+        </select>
+        <ChevronDown
+          aria-hidden="true"
+          size={20}
+          strokeWidth={3}
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
+        />
+      </div>
+    </label>
+  );
 }
 function DateField({label,value,onChange,dateTime=false}) { return <Field label={label} value={value} onChange={onChange} type={dateTime?"datetime-local":"date"}/>; }
 
 function Result({result}) {
-  if (result == null) return null;
-  const entries = typeof result === "object" ? Object.entries(result) : [["result",result]];
-  return <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} className="mt-8 grid gap-4 sm:grid-cols-2">
-    {entries.map(([key,value],i)=><div key={key} className={`border-[3px] border-black p-4 shadow-[4px_4px_0px_#000] ${i===0?"bg-[#FDE047]":"bg-[#FFF8EC]"}`}>
-      <div className="text-xs font-black uppercase tracking-wider text-zinc-500">{key.replace(/([A-Z])/g," $1")}</div>
-      <div className="mt-1 break-words text-2xl font-black">{typeof value==="number"?Number(value.toFixed(6)).toLocaleString():String(value)}</div>
-    </div>)}
-  </motion.div>;
+  return <AnimatePresence mode="wait">
+    {result != null && (
+      <motion.div key="result" initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}} transition={{duration:0.2}} className="mt-8 grid gap-4 sm:grid-cols-2">
+        {(typeof result === "object" ? Object.entries(result) : [["result",result]]).map(([key,value],i)=><div key={key} className={`border-[3px] border-black p-4 shadow-[4px_4px_0px_#000] ${i===0?"bg-[#FDE047]":"bg-[#FFF8EC]"}`}>
+          <div className="text-xs font-black uppercase tracking-wider text-zinc-500">{key.replace(/([A-Z])/g," $1")}</div>
+          <div className="mt-1 break-words text-2xl font-black">{typeof value==="number"?(Number.isFinite(value)?formatNumber(value):"—"):String(value)}</div>
+        </div>)}
+      </motion.div>
+    )}
+  </AnimatePresence>;
 }
 
 export default function CalculatorPage() {
@@ -96,33 +152,39 @@ export default function CalculatorPage() {
 
   if (!config) return <CalculatorLayout title="Calculator Not Found" description="That tool is not configured yet."><Link to="/dashboard" className="inline-flex border-[3px] border-black bg-[#FDE047] px-4 py-2 font-black shadow-[3px_3px_0px_#000]">Back to Dashboard</Link></CalculatorLayout>;
 
+  const num=(v,label="Value")=>{
+    const n=parseFloat(v);
+    if(v===undefined||v===null||v===""||!Number.isFinite(n)) throw new Error(`${label} must be a valid number.`);
+    return n;
+  };
+
   const calculate=async()=>{
-    setError(""); setResult(null);
+    setError("");
     try {
       let output;
-      if (units) output=await convertUnit(Number(values.value),values.from||defaults.from,values.to||defaults.to,type);
-      else if (type==="percentage") output=await calculateFinance(type,[values.mode||"of",Number(values.a),Number(values.b)]);
-      else if (type==="simpleInterest") output=await calculateFinance(type,[Number(values.principal),Number(values.rate),Number(values.time)]);
-      else if (type==="compoundInterest") output=await calculateFinance(type,[Number(values.principal),Number(values.rate),Number(values.time),Number(values.frequency||1)]);
-      else if (type==="profitLoss") output=await calculateFinance(type,[Number(values.cost),Number(values.selling)]);
-      else if (["discount","gst","tax"].includes(type)) output=await calculateFinance(type,[Number(values.amount),Number(values.rate)]);
-      else if (type==="emi"||type==="loan") output=await calculateFinance(type,[Number(values.principal),Number(values.rate),Number(values.tenure)]);
-      else if (type==="sip") output=await calculateFinance(type,[Number(values.monthly),Number(values.rate),Number(values.time)]);
+      if (units) output=await convertUnit(num(values.value,"Value"),values.from||defaults.from,values.to||defaults.to,type);
+      else if (type==="percentage") output=await calculateFinance(type,[values.mode||"of",num(values.a,"X"),num(values.b,"Y")]);
+      else if (type==="simpleInterest") output=await calculateFinance(type,[num(values.principal,"Principal"),num(values.rate,"Rate"),num(values.time,"Time")]);
+      else if (type==="compoundInterest") output=await calculateFinance(type,[num(values.principal,"Principal"),num(values.rate,"Rate"),num(values.time,"Time"),num(values.frequency||1,"Compounds/Year")]);
+      else if (type==="profitLoss") output=await calculateFinance(type,[num(values.cost,"Cost Price"),num(values.selling,"Selling Price")]);
+      else if (["discount","gst","tax"].includes(type)) output=await calculateFinance(type,[num(values.amount,"Amount"),num(values.rate,"Rate")]);
+      else if (type==="emi"||type==="loan") output=await calculateFinance(type,[num(values.principal,"Principal"),num(values.rate,"Rate"),num(values.tenure,"Tenure")]);
+      else if (type==="sip") output=await calculateFinance(type,[num(values.monthly,"Monthly Investment"),num(values.rate,"Rate"),num(values.time,"Time")]);
       else if (type==="currency") {
         const rates={USD:1,EUR:.92,GBP:.79,INR:83.5,JPY:149.5,AUD:1.52,CAD:1.36};
-        output=await calculateFinance(type,[Number(values.amount),values.fromCurrency||"USD",values.toCurrency||"INR",rates]);
+        output=await calculateFinance(type,[num(values.amount,"Amount"),values.fromCurrency||"USD",values.toCurrency||"INR",rates]);
       } else if (type==="age") output=await calculateDate(type,[values.birth,values.asOf||new Date().toISOString().slice(0,10)]);
       else if (type==="dateDifference"||type==="businessDays") output=await calculateDate(type,[values.start,values.end]);
       else if (type==="countdown") output=await calculateDate(type,[values.target]);
       else if (type==="timezone") output=await calculateDate(type,[values.dateTime,values.fromZone||"UTC",values.toZone||"Asia/Kolkata"]);
       else if (["bmi","calories","cooking","clothingSize","shoeSize"].includes(type)) {
-        if(type==="bmi") output=await calculateEveryday(type,[Number(values.weight),Number(values.height)]);
-        if(type==="calories") output=await calculateEveryday(type,[Number(values.weight),Number(values.height),Number(values.age),values.gender||"male",values.activityLevel||"moderate"]);
-        if(type==="cooking") output=await calculateEveryday(type,[Number(values.amount),values.fromUnit||"cup",values.toUnit||"milliliter"]);
-        if(type==="clothingSize"||type==="shoeSize") output=await calculateEveryday(type,[Number(values.size),values.fromSystem||"us",values.toSystem||"eu"]);
+        if(type==="bmi") output=await calculateEveryday(type,[num(values.weight,"Weight"),num(values.height,"Height")]);
+        if(type==="calories") output=await calculateEveryday(type,[num(values.weight,"Weight"),num(values.height,"Height"),num(values.age,"Age"),values.gender||"male",values.activityLevel||"moderate"]);
+        if(type==="cooking") output=await calculateEveryday(type,[num(values.amount,"Amount"),values.fromUnit||"cup",values.toUnit||"milliliter"]);
+        if(type==="clothingSize"||type==="shoeSize") output=await calculateEveryday(type,[num(values.size,"Size"),values.fromSystem||"us",values.toSystem||"eu"]);
       } else throw new Error("This calculator is not configured yet.");
       setResult(output);
-    } catch(e) { setError(e.message||"Please check your inputs."); }
+    } catch(e) { setError(e.message||"Please check your inputs."); setResult(null); }
   };
 
   const renderFields=()=>{
@@ -153,12 +215,12 @@ export default function CalculatorPage() {
   const accent = config[2]==="unit" ? "#8B5CF6" : config[2]==="finance" ? "#FDE047" : config[2]==="datetime" ? "#F43F5E" : "#5EEAD4";
 
   return <CalculatorLayout title={config[0]} description={config[1]} accent={accent} eyebrow={`${config[2]} • ConvertHub`}>
-    <motion.section initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} className="border-[3px] border-black bg-white p-5 shadow-[7px_7px_0px_#000] sm:p-8">
+    <motion.section initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} className="w-full border-[3px] border-black bg-white p-4 shadow-[5px_5px_0px_#000] sm:p-6 sm:shadow-[7px_7px_0px_#000] md:p-8">
       {renderFields()}
       {error&&<div className="mt-5 border-[3px] border-black bg-[#F43F5E] p-4 font-bold text-white">{error}</div>}
-      <div className="mt-7 flex flex-wrap gap-3">
-        <button onClick={calculate} className="inline-flex items-center gap-2 border-[3px] border-black bg-[#FDE047] px-5 py-3 font-black shadow-[4px_4px_0px_#000] transition-transform hover:-translate-y-0.5">Calculate <ArrowRight size={18} strokeWidth={3}/></button>
-        <button onClick={()=>{setValues({});setResult(null);setError("")}} className="inline-flex items-center gap-2 border-[3px] border-black bg-white px-5 py-3 font-black shadow-[4px_4px_0px_#000]"><RefreshCcw size={17}/> Reset</button>
+      <div className="mt-7 grid grid-cols-1 gap-3 sm:flex sm:flex-wrap">
+        <button onClick={calculate} className="inline-flex min-h-12 w-full items-center justify-center gap-2 border-[3px] border-black bg-[#FDE047] px-5 py-3 font-black shadow-[4px_4px_0px_#000] transition-transform hover:-translate-y-0.5 sm:w-auto">Calculate <ArrowRight size={18} strokeWidth={3}/></button>
+        <button onClick={()=>{setValues({});setResult(null);setError("")}} className="inline-flex min-h-12 w-full items-center justify-center gap-2 border-[3px] border-black bg-white px-5 py-3 font-black shadow-[4px_4px_0px_#000] sm:w-auto"><RefreshCcw size={17}/> Reset</button>
       </div>
       <Result result={result}/>
     </motion.section>

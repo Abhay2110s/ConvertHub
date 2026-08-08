@@ -1,0 +1,12 @@
+@media (max-width: 640px) {
+  html { overflow-x: hidden; }
+  body { min-width: 0; overflow-x: hidden; }
+  button, a, select, input { -webkit-tap-highlight-color: transparent; }
+  input, select, button { max-width: 100%; }
+}
+
+@media (max-width: 420px) {
+  .calculator-result-value {
+    font-size: 1.25rem;
+  }
+}
