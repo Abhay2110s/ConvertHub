@@ -1,0 +1,19 @@
+{
+  "name": "converthub-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Serverless API backend for ConvertHub - currency exchange rates and world time, deployed on Vercel. No database, no authentication.",
+  "type": "module",
+  "engines": {
+    "node": ">=18.x"
+  },
+  "scripts": {
+    "dev": "node --watch server.js",
+    "start": "node server.js",
+    "dev:vercel": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "devDependencies": {
+    "vercel": "^37.0.0"
+  }
+}

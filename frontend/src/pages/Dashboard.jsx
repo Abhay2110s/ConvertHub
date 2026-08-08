@@ -20,22 +20,29 @@ import { everydayCalculators } from "../data/everydayCalculators";
 import DashboardHeader from "../components/dashboard/DashboardHeader";
 import SearchBar from "../components/dashboard/SearchBar";
 
+/* =========================================================
+   ALL TOOLS
+========================================================= */
+
 const tools = [
   ...unitConverters.map((x) => ({
     id: x.id,
     title: x.name,
     category: "Unit Conversion",
   })),
+
   ...financeCalculators.map((x) => ({
     id: x.id,
     title: x.name,
     category: "Finance",
   })),
+
   ...dateTimeCalculators.map((x) => ({
     id: x.id,
     title: x.name,
     category: "Date & Time",
   })),
+
   ...everydayCalculators.map((x) => ({
     id: x.id,
     title: x.name,
@@ -43,19 +50,32 @@ const tools = [
   })),
 ];
 
+/* =========================================================
+   THEME COLORS
+========================================================= */
+
 const CATEGORY_COLORS = [
-  "#8B5CF6",
-  "#FDE047",
-  "#5EEAD4",
-  "#F43F5E",
+  "#8B5CF6", // Purple
+  "#FDE047", // Yellow
+  "#5EEAD4", // Teal
+  "#F43F5E", // Pink
 ];
+
+/* =========================================================
+   CATEGORY ICON
+========================================================= */
 
 function getCategoryIcon(category) {
   if (category === "Unit Conversion") return Ruler;
   if (category === "Finance") return CircleDollarSign;
   if (category === "Date & Time") return CalendarDays;
+
   return Sparkles;
 }
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
 
 export default function Dashboard() {
   return (
@@ -65,7 +85,7 @@ export default function Dashboard() {
           HEADER
       ===================================================== */}
 
-      <header className="relative z-50 border-b-[3px] border-black bg-white">
+      <header className="relative z-50 border-b-[3px] border-black bg-[#FFFDF7]">
         <DashboardHeader />
       </header>
 
@@ -73,109 +93,193 @@ export default function Dashboard() {
           MAIN
       ===================================================== */}
 
-      <main className="relative">
+      <main className="relative isolate">
 
-        {/* =================================================
-            BACKGROUND — SAME CONVERTHUB THEME
-        ================================================= */}
+        {/* ===================================================
+            BACKGROUND PATTERN
+        =================================================== */}
 
-        {/* Grid */}
         <div
           aria-hidden="true"
           className="
             pointer-events-none
             absolute
             inset-0
-            opacity-[0.42]
-            [background-image:linear-gradient(#00000012_1px,transparent_1px),linear-gradient(90deg,#00000012_1px,transparent_1px)]
-            [background-size:32px_32px]
+            -z-20
+            overflow-hidden
           "
-        />
+        >
 
-        {/* Purple blob */}
-        <motion.div
-          aria-hidden="true"
-          animate={{
-            x: [0, 30, -15, 0],
-            y: [0, -20, 15, 0],
-            scale: [1, 1.08, 0.96, 1],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="
-            pointer-events-none
-            absolute
-            -left-40
-            top-20
-            h-96
-            w-96
-            rounded-full
-            bg-[#8B5CF6]
-            opacity-[0.12]
-            blur-3xl
-          "
-        />
+          {/* Base grid */}
 
-        {/* Cyan blob */}
-        <motion.div
-          aria-hidden="true"
-          animate={{
-            x: [0, -25, 20, 0],
-            y: [0, 20, -15, 0],
-            scale: [1, 0.95, 1.06, 1],
-          }}
-          transition={{
-            duration: 17,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="
-            pointer-events-none
-            absolute
-            right-[-160px]
-            top-[35%]
-            h-[420px]
-            w-[420px]
-            rounded-full
-            bg-[#5EEAD4]
-            opacity-[0.13]
-            blur-3xl
-          "
-        />
+          <div
+            className="
+              absolute
+              inset-0
+              opacity-[0.22]
+              [background-image:linear-gradient(#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)]
+              [background-size:40px_40px]
+            "
+          />
 
-        {/* Pink blob */}
-        <motion.div
-          aria-hidden="true"
-          animate={{
-            x: [0, 20, -15, 0],
-            y: [0, -15, 20, 0],
-            rotate: [0, 5, -5, 0],
-          }}
-          transition={{
-            duration: 13,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="
-            pointer-events-none
-            absolute
-            left-[42%]
-            top-[55%]
-            h-72
-            w-72
-            rounded-full
-            bg-[#F43F5E]
-            opacity-[0.07]
-            blur-3xl
-          "
-        />
+          {/* Diagonal pattern */}
 
-        {/* =================================================
+          <div
+            className="
+              absolute
+              inset-0
+              opacity-[0.07]
+              [background-image:repeating-linear-gradient(135deg,#000_0,#000_2px,transparent_2px,transparent_12px)]
+            "
+          />
+
+          {/* Small dot pattern */}
+
+          <div
+            className="
+              absolute
+              inset-0
+              opacity-[0.12]
+              [background-image:radial-gradient(#000_1.2px,transparent_1.2px)]
+              [background-size:24px_24px]
+            "
+          />
+
+          {/* Soft center glow */}
+
+          <div
+            className="
+              absolute
+              left-1/2
+              top-24
+              h-[650px]
+              w-[650px]
+              -translate-x-1/2
+              rounded-full
+              bg-white
+              opacity-70
+              blur-3xl
+            "
+          />
+
+          {/* =================================================
+              PURPLE SHAPE
+          ================================================= */}
+
+          <motion.div
+            animate={{
+              x: [0, 35, -20, 0],
+              y: [0, -25, 20, 0],
+              rotate: [0, 8, -5, 0],
+              scale: [1, 1.08, 0.96, 1],
+            }}
+            transition={{
+              duration: 16,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="
+              absolute
+              -left-40
+              top-28
+              h-[420px]
+              w-[420px]
+              rounded-full
+              bg-[#8B5CF6]
+              opacity-[0.14]
+              blur-3xl
+            "
+          />
+
+          {/* =================================================
+              TEAL SHAPE
+          ================================================= */}
+
+          <motion.div
+            animate={{
+              x: [0, -30, 25, 0],
+              y: [0, 25, -15, 0],
+              rotate: [0, -6, 5, 0],
+              scale: [1, 0.94, 1.06, 1],
+            }}
+            transition={{
+              duration: 18,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="
+              absolute
+              -right-44
+              top-[32%]
+              h-[480px]
+              w-[480px]
+              rounded-full
+              bg-[#5EEAD4]
+              opacity-[0.15]
+              blur-3xl
+            "
+          />
+
+          {/* =================================================
+              PINK SHAPE
+          ================================================= */}
+
+          <motion.div
+            animate={{
+              x: [0, 25, -15, 0],
+              y: [0, -20, 20, 0],
+              rotate: [0, 7, -7, 0],
+            }}
+            transition={{
+              duration: 14,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="
+              absolute
+              left-[38%]
+              top-[52%]
+              h-[320px]
+              w-[320px]
+              rounded-full
+              bg-[#F43F5E]
+              opacity-[0.08]
+              blur-3xl
+            "
+          />
+
+          {/* =================================================
+              YELLOW SHAPE
+          ================================================= */}
+
+          <motion.div
+            animate={{
+              x: [0, -20, 15, 0],
+              y: [0, 15, -10, 0],
+              rotate: [0, -4, 5, 0],
+            }}
+            transition={{
+              duration: 19,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="
+              absolute
+              right-[18%]
+              top-[8%]
+              h-[240px]
+              w-[240px]
+              rounded-full
+              bg-[#FDE047]
+              opacity-[0.10]
+              blur-3xl
+            "
+          />
+        </div>
+
+        {/* ===================================================
             CONTENT WRAPPER
-        ================================================= */}
+        =================================================== */}
 
         <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
 
@@ -187,7 +291,7 @@ export default function Dashboard() {
 
             <div className="grid items-center gap-12 lg:grid-cols-[1fr_340px]">
 
-              {/* Hero copy */}
+              {/* HERO COPY */}
 
               <div>
 
@@ -223,6 +327,7 @@ export default function Dashboard() {
                   "
                 >
                   <Sparkles size={15} strokeWidth={3} />
+
                   ConvertHub Dashboard
                 </motion.div>
 
@@ -287,7 +392,7 @@ export default function Dashboard() {
                   Fast, simple and built for real-world use.
                 </motion.p>
 
-                {/* Hero stats */}
+                {/* HERO STATS */}
 
                 <motion.div
                   initial={{
@@ -309,6 +414,7 @@ export default function Dashboard() {
                     gap-3
                   "
                 >
+
                   <div
                     className="
                       border-[3px]
@@ -353,10 +459,13 @@ export default function Dashboard() {
                   >
                     NO SIGN UP
                   </div>
+
                 </motion.div>
               </div>
 
-              {/* Hero graphic */}
+              {/* =================================================
+                  HERO GRAPHIC
+              ================================================= */}
 
               <motion.div
                 initial={{
@@ -388,6 +497,7 @@ export default function Dashboard() {
                   shadow-[10px_10px_0px_#000]
                 "
               >
+
                 <div
                   aria-hidden="true"
                   className="
@@ -440,10 +550,13 @@ export default function Dashboard() {
                 >
                   SIMPLE
                 </div>
+
               </motion.div>
             </div>
 
-            {/* Search */}
+            {/* =================================================
+                SEARCH
+            ================================================= */}
 
             <motion.div
               initial={{
@@ -460,8 +573,13 @@ export default function Dashboard() {
               }}
               className="mx-auto mt-14 max-w-4xl"
             >
+
               <div className="mb-4 flex items-center justify-center gap-2">
-                <Search size={17} strokeWidth={3} />
+
+                <Search
+                  size={17}
+                  strokeWidth={3}
+                />
 
                 <span
                   className="
@@ -474,10 +592,13 @@ export default function Dashboard() {
                 >
                   Find a tool
                 </span>
+
               </div>
 
               <SearchBar />
+
             </motion.div>
+
           </section>
 
           {/* =================================================
@@ -489,6 +610,7 @@ export default function Dashboard() {
             <div className="mb-8 flex items-end justify-between gap-4">
 
               <div>
+
                 <div
                   className="
                     text-xs
@@ -514,6 +636,7 @@ export default function Dashboard() {
                 >
                   Popular Tools
                 </h2>
+
               </div>
 
               <Link
@@ -531,16 +654,25 @@ export default function Dashboard() {
                 "
               >
                 View all
-                <ArrowRight size={16} strokeWidth={3} />
+
+                <ArrowRight
+                  size={16}
+                  strokeWidth={3}
+                />
               </Link>
+
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
 
               {tools.slice(0, 8).map((tool, index) => {
+
                 const Icon = getCategoryIcon(tool.category);
+
                 const accent =
-                  CATEGORY_COLORS[index % CATEGORY_COLORS.length];
+                  CATEGORY_COLORS[
+                    index % CATEGORY_COLORS.length
+                  ];
 
                 return (
                   <motion.div
@@ -564,6 +696,7 @@ export default function Dashboard() {
                       duration: 0.45,
                     }}
                   >
+
                     <Link
                       to={`/calculator/${tool.id}`}
                       className="
@@ -573,13 +706,14 @@ export default function Dashboard() {
                         overflow-hidden
                         border-[3px]
                         border-black
-                        bg-white
+                        bg-[#FFFDF7]
                         p-5
                         shadow-[5px_5px_0px_#000]
                         transition-transform
                         hover:-translate-y-1
                       "
                     >
+
                       <div
                         className="
                           absolute
@@ -648,6 +782,7 @@ export default function Dashboard() {
                       </p>
 
                       <div className="mt-5 flex items-center justify-between">
+
                         <span
                           className="
                             text-[10px]
@@ -668,12 +803,17 @@ export default function Dashboard() {
                             group-hover:translate-x-1
                           "
                         />
+
                       </div>
+
                     </Link>
+
                   </motion.div>
                 );
               })}
+
             </div>
+
           </section>
 
           {/* =================================================
@@ -685,6 +825,7 @@ export default function Dashboard() {
             <div className="flex items-end justify-between gap-4">
 
               <div>
+
                 <div
                   className="
                     text-xs
@@ -710,6 +851,7 @@ export default function Dashboard() {
                 >
                   Explore Categories
                 </h2>
+
               </div>
 
               <Link
@@ -727,16 +869,24 @@ export default function Dashboard() {
                 "
               >
                 View all
-                <ArrowRight size={16} strokeWidth={3} />
+
+                <ArrowRight
+                  size={16}
+                  strokeWidth={3}
+                />
               </Link>
+
             </div>
 
             <div className="mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
 
               {categories.map((category, index) => {
+
                 const accent =
                   category.accent ||
-                  CATEGORY_COLORS[index % CATEGORY_COLORS.length];
+                  CATEGORY_COLORS[
+                    index % CATEGORY_COLORS.length
+                  ];
 
                 return (
                   <motion.div
@@ -758,6 +908,7 @@ export default function Dashboard() {
                       duration: 0.5,
                     }}
                   >
+
                     <Link
                       to={`/category/${category.id}`}
                       className="
@@ -767,14 +918,13 @@ export default function Dashboard() {
                         overflow-hidden
                         border-[3px]
                         border-black
-                        bg-white
+                        bg-[#FFFDF7]
                         p-6
                         shadow-[6px_6px_0px_#000]
                         transition-transform
                         hover:-translate-y-1
                       "
                     >
-                      {/* Accent block */}
 
                       <div
                         className="
@@ -788,8 +938,6 @@ export default function Dashboard() {
                           backgroundColor: accent,
                         }}
                       />
-
-                      {/* Icon */}
 
                       <div
                         className="
@@ -838,6 +986,7 @@ export default function Dashboard() {
                           justify-between
                         "
                       >
+
                         <span
                           className="
                             text-[10px]
@@ -858,12 +1007,17 @@ export default function Dashboard() {
                             group-hover:translate-x-1
                           "
                         />
+
                       </div>
+
                     </Link>
+
                   </motion.div>
                 );
               })}
+
             </div>
+
           </section>
 
           {/* =================================================
@@ -875,6 +1029,7 @@ export default function Dashboard() {
             <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
 
               <div>
+
                 <div
                   className="
                     text-xs
@@ -900,6 +1055,7 @@ export default function Dashboard() {
                 >
                   Complete Toolbox
                 </h2>
+
               </div>
 
               <div
@@ -917,11 +1073,13 @@ export default function Dashboard() {
               >
                 {tools.length} TOOLS
               </div>
+
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 
               {tools.map((tool, index) => (
+
                 <motion.div
                   key={tool.id}
                   initial={{
@@ -941,6 +1099,7 @@ export default function Dashboard() {
                     duration: 0.35,
                   }}
                 >
+
                   <Link
                     to={`/calculator/${tool.id}`}
                     className="
@@ -951,7 +1110,7 @@ export default function Dashboard() {
                       gap-4
                       border-[3px]
                       border-black
-                      bg-white
+                      bg-[#FFFDF7]
                       p-4
                       shadow-[3px_3px_0px_#000]
                       transition-all
@@ -959,7 +1118,9 @@ export default function Dashboard() {
                       hover:shadow-[5px_5px_0px_#8B5CF6]
                     "
                   >
+
                     <div className="min-w-0">
+
                       <span className="block truncate font-black">
                         {tool.title}
                       </span>
@@ -977,6 +1138,7 @@ export default function Dashboard() {
                       >
                         {tool.category}
                       </span>
+
                     </div>
 
                     <div
@@ -999,10 +1161,15 @@ export default function Dashboard() {
                         strokeWidth={3}
                       />
                     </div>
+
                   </Link>
+
                 </motion.div>
+
               ))}
+
             </div>
+
           </section>
 
           {/* =================================================
@@ -1025,7 +1192,8 @@ export default function Dashboard() {
                 sm:px-10
               "
             >
-              {/* Dot texture */}
+
+              {/* CTA PATTERN */}
 
               <div
                 aria-hidden="true"
@@ -1039,9 +1207,42 @@ export default function Dashboard() {
                 "
               />
 
+              <div
+                aria-hidden="true"
+                className="
+                  pointer-events-none
+                  absolute
+                  -right-20
+                  -top-20
+                  h-56
+                  w-56
+                  rounded-full
+                  border-[3px]
+                  border-[#FDE047]
+                  opacity-40
+                "
+              />
+
+              <div
+                aria-hidden="true"
+                className="
+                  pointer-events-none
+                  absolute
+                  -bottom-24
+                  left-1/3
+                  h-64
+                  w-64
+                  rounded-full
+                  border-[3px]
+                  border-[#5EEAD4]
+                  opacity-30
+                "
+              />
+
               <div className="relative z-10 flex flex-col items-start justify-between gap-7 sm:flex-row sm:items-center">
 
                 <div>
+
                   <div
                     className="
                       text-xs
@@ -1067,6 +1268,7 @@ export default function Dashboard() {
                   >
                     Search the complete ConvertHub toolbox.
                   </h3>
+
                 </div>
 
                 <Link
@@ -1089,6 +1291,7 @@ export default function Dashboard() {
                   "
                 >
                   Explore Categories
+
                   <ArrowRight
                     size={18}
                     strokeWidth={3}
@@ -1096,9 +1299,11 @@ export default function Dashboard() {
                 </Link>
 
               </div>
+
             </div>
 
           </section>
+
         </div>
       </main>
     </div>
