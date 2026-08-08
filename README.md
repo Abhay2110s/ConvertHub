@@ -1,51 +1,382 @@
-# ConvertHub
+# 🧮 ConvertHub
 
-A multi-category conversion and calculation tool. Live currency and world-time
-data comes from the `backend/` API; everything else (unit, date, everyday,
-and the rest of finance) is calculated client-side in `frontend/`.
+**ConvertHub** is a modern, responsive web-based toolbox for unit conversions, finance calculations, date & time calculations, and everyday utilities.
 
-```
+The project is designed to make common calculations **fast, simple, and accessible** from any device.
+
+## 🌐 Live Demo
+
+👉 https://convert-hub-12.vercel.app/
+
+## ✨ Features
+
+### 📏 Unit Converters
+
+Convert between commonly used units such as:
+
+* Length
+* Weight
+* Area
+* Volume
+* Speed
+* Temperature
+* Pressure
+* Force
+* Torque
+* Density
+* Energy
+* Power
+* Frequency
+* Fuel Consumption
+
+### 💰 Finance Calculators
+
+* Percentage Calculator
+* Simple Interest Calculator
+* Compound Interest Calculator
+* Profit & Loss Calculator
+* Discount Calculator
+* GST Calculator
+* Tax Calculator
+* EMI Calculator
+* Loan Calculator
+* SIP Calculator
+* Currency Converter
+
+### 📅 Date & Time Tools
+
+* Age Calculator
+* Date Difference Calculator
+* Business Days Calculator
+* Countdown Timer
+* Timezone Converter
+
+### 🌡️ Everyday Calculators
+
+* BMI Calculator
+* Calorie Calculator
+* Cooking Converter
+* Clothing Size Converter
+* Shoe Size Converter
+
+## 🎨 UI & Design
+
+ConvertHub focuses on a simple and user-friendly interface.
+
+### 📱 Fully Responsive
+
+The application is designed to work across:
+
+* 📱 Mobile
+* 📲 Tablet
+* 💻 Desktop
+
+The layouts automatically adapt to different screen sizes for a consistent experience.
+
+### 🎯 Design Features
+
+* Clean and modern interface
+* Bold visual style
+* Responsive layouts
+* Interactive animations
+* Easy-to-use input fields
+* Clear calculation results
+* Category-based organization
+* Searchable toolbox
+* Mobile-friendly navigation
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* ⚛️ React
+* 🟨 JavaScript
+* 🎨 Tailwind CSS
+* 🎬 Framer Motion
+* 🧭 React Router
+* 🎯 Lucide React
+
+### Backend
+
+* 🟢 Node.js
+* 🚂 Express.js
+* 🔌 REST APIs
+* 🌐 CORS
+* ⏱️ Rate Limiting
+
+### External APIs
+
+ConvertHub uses external services for live data such as:
+
+* 💱 Currency exchange rates
+* 🌍 Time and timezone information
+
+## 📂 Project Structure
+
+```text
 ConvertHub/
-  frontend/   React + Vite app (see frontend/README.md)
-  backend/    Serverless API on Vercel, no DB/auth (see backend/README.md)
+│
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── data/
+│   │   ├── engines/
+│   │   ├── pages/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   │
+│   ├── public/
+│   ├── .env
+│   ├── package.json
+│   └── vite.config.js
+│
+├── backend/
+│   ├── routes/
+│   ├── lib/
+│   ├── server.js
+│   ├── package.json
+│   └── .env
+│
+└── README.md
 ```
 
-## Deploying to Vercel
+## 🚀 Getting Started
 
-This is **two separate Vercel projects** sharing one repo - `frontend` has
-no build step for the backend and `backend` has no build step at all, so
-splitting them keeps each deploy simple and fast.
+### 1. Clone the repository
 
-### 1. Deploy the backend first
+```bash
+git clone YOUR_GITHUB_REPOSITORY_URL
+```
 
-1. Vercel → **New Project → Import** this repo, set **Root Directory** to `backend`.
-2. No env vars are required to get started (see `backend/.env.example` for
-   the optional ones). Deploy.
-3. Copy the resulting URL, e.g. `https://converthub-backend.vercel.app`.
+```bash
+cd ConvertHub
+```
 
-### 2. Deploy the frontend
+### 2. Install frontend dependencies
 
-1. Vercel → **New Project → Import** the same repo again, set **Root
-   Directory** to `frontend`. Vercel auto-detects Vite (build: `vite build`,
-   output: `dist`).
-2. Before deploying, add an environment variable:
-   `VITE_API_BASE_URL` = the backend URL from step 1 (no trailing slash).
-   This **must** be set in the dashboard - the committed `frontend/.env` is
-   a localhost-only default for local dev and is gitignored on purpose.
-3. Deploy.
+```bash
+cd frontend
+npm install
+```
 
-### 3. Lock down CORS (recommended, not required)
+### 3. Install backend dependencies
 
-By default the backend's `ALLOWED_ORIGINS` is `*`, which is fine for public,
-read-only data but is worth tightening once you know the frontend's real
-domain: on the **backend** project, set
-`ALLOWED_ORIGINS=https://<your-frontend-project>.vercel.app` and redeploy.
+Open another terminal:
 
-### Notes
+```bash
+cd backend
+npm install
+```
 
-- `frontend/vercel.json` adds a rewrite so client-side routes (e.g.
-  `/calculator/length`) don't 404 on direct load/refresh - React Router
-  needs this on any static host.
-- If `frontend/.env` was already pushed to git before this was gitignored,
-  remove it from tracking once (`git rm --cached frontend/.env`) so future
-  commits don't reintroduce a localhost URL into the repo.
+## 🔐 Environment Variables
+
+### Frontend
+
+Create a `.env` or `.env.local` file inside the frontend directory:
+
+```env
+VITE_API_BASE_URL=http://localhost:3000
+```
+
+For production:
+
+```env
+VITE_API_BASE_URL=https://convert-hub-sigma.vercel.app
+```
+
+### Backend
+
+Create a `.env` file inside the backend directory:
+
+```env
+CURRENCY_API_BASE_URL=https://api.frankfurter.dev/v1
+TIME_API_BASE_URL=https://time.now/developer/api
+
+ALLOWED_ORIGINS=http://localhost:5173,https://convert-hub-12.vercel.app
+
+RATE_LIMIT_PER_MINUTE=60
+```
+
+> ⚠️ Never commit private API keys, passwords, tokens, or sensitive environment variables to GitHub.
+
+## ▶️ Running Locally
+
+### Start the backend
+
+From the `backend` directory:
+
+```bash
+npm run dev
+```
+
+The backend will run on:
+
+```text
+http://localhost:3000
+```
+
+Health check:
+
+```text
+http://localhost:3000/api/health
+```
+
+### Start the frontend
+
+From the `frontend` directory:
+
+```bash
+npm run dev
+```
+
+The frontend will normally run on:
+
+```text
+http://localhost:5173
+```
+
+Open the application in your browser:
+
+```text
+http://localhost:5173
+```
+
+## 🔌 Backend API
+
+The backend currently provides endpoints such as:
+
+### Health
+
+```http
+GET /api/health
+```
+
+### Currency
+
+```http
+GET /api/currency/currencies
+```
+
+```http
+GET /api/currency/rates?base=USD
+```
+
+```http
+GET /api/currency/convert?amount=100&from=USD&to=INR
+```
+
+### Time
+
+```http
+GET /api/time/current?timezone=Asia/Kolkata
+```
+
+```http
+GET /api/time/timezones
+```
+
+```http
+GET /api/time/convert?dateTime=2026-08-08T10:00&from=Asia/Kolkata&to=America/New_York
+```
+
+## 🚀 Deployment
+
+The project uses **Vercel** for deployment.
+
+### Frontend
+
+Production frontend:
+
+```text
+https://convert-hub-12.vercel.app
+```
+
+Frontend environment variable:
+
+```env
+VITE_API_BASE_URL=https://convert-hub-sigma.vercel.app
+```
+
+### Backend
+
+Production backend:
+
+```text
+https://convert-hub-sigma.vercel.app
+```
+
+Backend CORS configuration:
+
+```env
+ALLOWED_ORIGINS=https://convert-hub-12.vercel.app,http://localhost:5173
+```
+
+After changing environment variables on Vercel, redeploy the affected project so the new values are applied.
+
+## 🧠 What I Learned
+
+Building ConvertHub helped me gain practical experience with:
+
+* ⚛️ React application architecture
+* 🧩 Reusable components
+* 🧭 Client-side routing
+* 🎨 Responsive UI development
+* 🔌 REST API integration
+* 🖥️ Node.js backend development
+* 🌐 CORS configuration
+* 🔐 Environment variables
+* ⏱️ API rate limiting
+* 🚀 Vercel deployment
+* 🔗 Connecting frontend and backend services
+* 📱 Responsive design across devices
+
+## 🔮 Future Improvements
+
+Some features planned for future versions:
+
+* ➕ More unit conversions
+* 💰 More financial calculators
+* 📊 Calculation history
+* ⭐ Favorite tools
+* 🔍 Improved search
+* 🌙 Dark mode
+* 📤 Share calculation results
+* 📱 Improved mobile experience
+* 🌍 More currencies and timezones
+* ⚡ Performance improvements
+
+## 🤝 Contributing
+
+Contributions, suggestions, and improvements are welcome.
+
+1. Fork the repository
+2. Create a new branch
+
+```bash
+git checkout -b feature/new-feature
+```
+
+3. Make your changes
+4. Commit your changes
+
+```bash
+git commit -m "Add new feature"
+```
+
+5. Push the branch
+
+```bash
+git push origin feature/new-feature
+```
+
+6. Open a Pull Request
+
+## 📄 License
+
+This project is open-source and available under the **MIT License**.
+
+## 👨‍💻 Author
+
+Built with ❤️ while learning and exploring modern web development.
+
+⭐ If you find **ConvertHub** useful, consider giving the repository a star!
