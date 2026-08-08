@@ -712,7 +712,7 @@ export default function LandingFooter() {
             </motion.span>
 
             <span>
-              for simpler conversions.
+               by Abhay for simpler conversions.
             </span>
           </div>
 
