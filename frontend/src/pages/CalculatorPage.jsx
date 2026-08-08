@@ -45,6 +45,19 @@ const DEFAULT_CURRENCY_OPTIONS = [
   ["MYR","Malaysian Ringgit"],["IDR","Indonesian Rupiah"],["PHP","Philippine Peso"]
 ];
 
+// Small default so the dropdown isn't empty on first paint. CalculatorPage
+// fetches the full IANA list from /api/time/timezones on mount and swaps
+// it in - the backend already returns every zone the tz database knows.
+const DEFAULT_TIMEZONE_OPTIONS = [
+  ["UTC","UTC"],["Asia/Kolkata","Asia/Kolkata"],["America/New_York","America/New York"],
+  ["America/Los_Angeles","America/Los Angeles"],["Europe/London","Europe/London"],["Asia/Tokyo","Asia/Tokyo"]
+];
+
+// IANA ids like "America/New_York" -> "America / New York" for the dropdown.
+function labelForTimeZone(id) {
+  return id.replace(/_/g, " ").replace(/\//g, " / ");
+}
+
 const CONFIG = {
   length:["Length Converter","Convert length units precisely.","unit"],
   weight:["Weight Converter","Convert mass and weight units.","unit"],
@@ -164,6 +177,7 @@ export default function CalculatorPage() {
   const [result,setResult]=useState(null);
   const [error,setError]=useState("");
   const [currencyOptions,setCurrencyOptions]=useState(DEFAULT_CURRENCY_OPTIONS);
+  const [timezoneOptions,setTimezoneOptions]=useState(DEFAULT_TIMEZONE_OPTIONS);
   const units=UNIT_OPTIONS[type];
   const set=(key,value)=>setValues(v=>({...v,[key]:value}));
   const defaults=useMemo(()=>({from:units?.[0]?.[0]??"",to:units?.[1]?.[0]??units?.[0]?.[0]??""}),[type]);
@@ -179,6 +193,30 @@ export default function CalculatorPage() {
       // Backend unreachable - keep the built-in default list so the
       // dropdown still works, live rates just won't include anything
       // added to the API since this list was last updated.
+    });
+    return ()=>{isMounted=false;};
+  },[type]);
+
+  useEffect(()=>{
+    if (type!=="timezone") return;
+    let isMounted=true;
+    apiGet("time/timezones").then(data=>{
+      if (!isMounted) return;
+      const zones=data.timezones||[];
+      if (!zones.length) return;
+      const options=zones.map(id=>[id,labelForTimeZone(id)]);
+      // Some tz-database builds canonicalize "Asia/Kolkata" to the older
+      // alias "Asia/Calcutta" (both are valid IANA identifiers for the
+      // same zone). Make sure the friendlier, current name is always
+      // selectable so the default "To Time Zone" never falls back to
+      // showing nothing selected.
+      if (!zones.includes("Asia/Kolkata") && zones.includes("Asia/Calcutta")) {
+        options.push(["Asia/Kolkata","Asia / Kolkata"]);
+      }
+      setTimezoneOptions(options);
+    }).catch(()=>{
+      // Backend unreachable - keep the built-in default list so the
+      // dropdown still works with a handful of common zones.
     });
     return ()=>{isMounted=false;};
   },[type]);
@@ -234,7 +272,7 @@ export default function CalculatorPage() {
       case "age": return <div className="grid gap-5 sm:grid-cols-2"><DateField label="Birth Date" value={values.birth} onChange={v=>set("birth",v)}/><DateField label="Calculate As Of (optional)" value={values.asOf} onChange={v=>set("asOf",v)}/></div>;
       case "dateDifference": case "businessDays": return <div className="grid gap-5 sm:grid-cols-2"><DateField label="Start Date" value={values.start} onChange={v=>set("start",v)}/><DateField label="End Date" value={values.end} onChange={v=>set("end",v)}/></div>;
       case "countdown": return <DateField label="Target Date & Time" value={values.target} onChange={v=>set("target",v)} dateTime/>;
-      case "timezone": return <div className="grid gap-5 sm:grid-cols-3"><DateField label="Date & Time" value={values.dateTime} onChange={v=>set("dateTime",v)} dateTime/><SelectField label="From Time Zone" value={values.fromZone||"UTC"} onChange={v=>set("fromZone",v)} options={[["UTC","UTC"],["Asia/Kolkata","India"],["America/New_York","New York"],["America/Los_Angeles","Los Angeles"],["Europe/London","London"],["Asia/Tokyo","Tokyo"]]}/><SelectField label="To Time Zone" value={values.toZone||"Asia/Kolkata"} onChange={v=>set("toZone",v)} options={[["UTC","UTC"],["Asia/Kolkata","India"],["America/New_York","New York"],["America/Los_Angeles","Los Angeles"],["Europe/London","London"],["Asia/Tokyo","Tokyo"]]}/></div>;
+      case "timezone": return <div className="grid gap-5 sm:grid-cols-3"><DateField label="Date & Time" value={values.dateTime} onChange={v=>set("dateTime",v)} dateTime/><SelectField label="From Time Zone" value={values.fromZone||"UTC"} onChange={v=>set("fromZone",v)} options={timezoneOptions}/><SelectField label="To Time Zone" value={values.toZone||"Asia/Kolkata"} onChange={v=>set("toZone",v)} options={timezoneOptions}/></div>;
       case "bmi": return <div className="grid gap-5 sm:grid-cols-2"><Field label="Weight (kg)" value={values.weight} onChange={v=>set("weight",v)}/><Field label="Height (cm)" value={values.height} onChange={v=>set("height",v)}/></div>;
       case "calories": return <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4"><Field label="Weight (kg)" value={values.weight} onChange={v=>set("weight",v)}/><Field label="Height (cm)" value={values.height} onChange={v=>set("height",v)}/><Field label="Age" value={values.age} onChange={v=>set("age",v)}/><SelectField label="Gender" value={values.gender||"male"} onChange={v=>set("gender",v)} options={[["male","Male"],["female","Female"]]}/><SelectField label="Activity" value={values.activityLevel||"moderate"} onChange={v=>set("activityLevel",v)} options={[["sedentary","Sedentary"],["light","Light"],["moderate","Moderate"],["active","Active"],["veryActive","Very Active"]]}/></div>;
       case "cooking": return <div className="grid gap-5 sm:grid-cols-3"><Field label="Amount" value={values.amount} onChange={v=>set("amount",v)}/><SelectField label="From" value={values.fromUnit||"cup"} onChange={v=>set("fromUnit",v)} options={[["milliliter","Milliliter"],["teaspoon","Teaspoon"],["tablespoon","Tablespoon"],["cup","Cup"],["fluidOunce","Fluid Ounce"],["pint","Pint"],["quart","Quart"],["liter","Liter"],["gallon","Gallon"]]}/><SelectField label="To" value={values.toUnit||"milliliter"} onChange={v=>set("toUnit",v)} options={[["milliliter","Milliliter"],["teaspoon","Teaspoon"],["tablespoon","Tablespoon"],["cup","Cup"],["fluidOunce","Fluid Ounce"],["pint","Pint"],["quart","Quart"],["liter","Liter"],["gallon","Gallon"]]}/></div>;
