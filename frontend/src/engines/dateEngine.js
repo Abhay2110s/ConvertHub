@@ -9,5 +9,5 @@ export function calculate(type, inputs) {
 
   const engine = engines[type];
   if (!engine) throw new Error(`Unknown date calculator: ${type}`);
-  return engine().then((mod) => mod.default(inputs));
+  return engine().then((mod) => mod.default(...inputs));
 }

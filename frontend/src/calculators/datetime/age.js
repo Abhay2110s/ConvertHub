@@ -1,14 +1,29 @@
-export default function calculateAge(birthDate) {
-  const today = new Date();
-  const birth = new Date(birthDate);
-  let age = today.getFullYear() - birth.getFullYear();
-  const monthDiff = today.getMonth() - birth.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-    age--;
+export default function calculateAge(birthDate, asOfDate = new Date().toISOString().slice(0, 10)) {
+  const birth = new Date(`${birthDate}T00:00:00`);
+  const asOf = new Date(`${asOfDate}T00:00:00`);
+
+  if (Number.isNaN(birth.getTime()) || Number.isNaN(asOf.getTime())) {
+    throw new Error("Please provide valid dates.");
   }
-  return {
-    years: age,
-    months: today.getMonth() - birth.getMonth() + (monthDiff < 0 ? 12 : 0),
-    days: today.getDate() - birth.getDate() + (today.getDate() < birth.getDate() ? new Date(today.getFullYear(), today.getMonth(), 0).getDate() : 0)
-  };
+  if (birth > asOf) {
+    throw new Error("Birth date cannot be after the reference date.");
+  }
+
+  let years = asOf.getFullYear() - birth.getFullYear();
+  let months = asOf.getMonth() - birth.getMonth();
+  let days = asOf.getDate() - birth.getDate();
+
+  if (days < 0) {
+    months -= 1;
+    const previousMonthDays = new Date(asOf.getFullYear(), asOf.getMonth(), 0).getDate();
+    days += previousMonthDays;
+  }
+  if (months < 0) {
+    years -= 1;
+    months += 12;
+  }
+
+  const totalDays = Math.floor((asOf - birth) / 86400000);
+
+  return { years, months, days, totalDays };
 }

@@ -1,4 +1,5 @@
 
+import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight, Sparkles, Zap } from "lucide-react";
@@ -29,16 +30,12 @@ export default function CTA() {
 
   return (
     <section
-    id="cta"
+      id="cta"
       ref={sectionRef}
       className="relative overflow-hidden py-28"
       style={{ backgroundColor: "#FFF8EC" }}
     >
-      {/* =====================================================
-          HALFTONE DOT BACKGROUND
-          Same structure as the existing page sections
-      ====================================================== */}
-
+      {/* Background */}
       <div
         aria-hidden
         className="
@@ -46,17 +43,10 @@ export default function CTA() {
           absolute
           inset-0
           bg-[radial-gradient(rgba(26,26,26,0.14)_1.5px,transparent_1.5px)]
-          bg-size-[16px_16px]
+          bg-[length:16px_16px]
           mask-[radial-gradient(ellipse_75%_75%_at_50%_50%,black_5%,transparent_82%)]
-          [-webkit-mask-image:radial-gradient(ellipse_75%_75%_at_50%_50%,black_5%,transparent_82%)]
         "
       />
-
-      {/* =====================================================
-          SECONDARY DOT FIELD
-          Creates a slightly richer comic-print texture
-          without making the background too heavy.
-      ====================================================== */}
 
       <div
         aria-hidden
@@ -66,16 +56,11 @@ export default function CTA() {
           inset-0
           opacity-40
           bg-[radial-gradient(rgba(26,26,26,0.08)_1px,transparent_1px)]
-          bg-size-[32px_32px]
-          mask-[radial-gradient(ellipse_65%_65%_at_50%_50%,black,transparent_75%)]
-          [-webkit-mask-image:radial-gradient(ellipse_65%_65%_at_50%_50%,black,transparent_75%)]
+          bg-[length:32px_32px]
         "
       />
 
-      {/* =====================================================
-          SOFT COLOR WASHES
-      ====================================================== */}
-
+      {/* Color washes */}
       <div
         aria-hidden
         className="
@@ -86,10 +71,7 @@ export default function CTA() {
         "
       />
 
-      {/* =====================================================
-          FLOATING VIOLET BLOB
-      ====================================================== */}
-
+      {/* Purple blob */}
       <motion.div
         aria-hidden
         className="
@@ -118,10 +100,7 @@ export default function CTA() {
         }}
       />
 
-      {/* =====================================================
-          FLOATING PINK BLOB
-      ====================================================== */}
-
+      {/* Pink blob */}
       <motion.div
         aria-hidden
         className="
@@ -147,14 +126,10 @@ export default function CTA() {
           duration: 12,
           repeat: Infinity,
           ease: "easeInOut",
-          delay: 0.5,
         }}
       />
 
-      {/* =====================================================
-          MAIN CONTENT
-      ====================================================== */}
-
+      {/* Main content */}
       <div className="relative z-10 mx-auto max-w-6xl px-6">
         <motion.div
           initial={{
@@ -199,14 +174,7 @@ export default function CTA() {
               "4% 7% 5% 6% / 6% 4% 7% 5%",
           }}
         >
-          {/* =================================================
-              CARD HALFTONE DETAIL
-
-              A subtle dot field inside the white card makes
-              the CTA feel like part of the same printed/sticker
-              system rather than a plain white rectangle.
-          ================================================== */}
-
+          {/* Card texture */}
           <div
             aria-hidden
             className="
@@ -215,16 +183,11 @@ export default function CTA() {
               inset-0
               opacity-30
               bg-[radial-gradient(rgba(26,26,26,0.10)_1.2px,transparent_1.2px)]
-              bg-size-[14px_14px]
-              mask-[radial-gradient(ellipse_80%_70%_at_50%_50%,black,transparent_75%)]
-              [-webkit-mask-image:radial-gradient(ellipse_80%_70%_at_50%_50%,black,transparent_75%)]
+              bg-[length:14px_14px]
             "
           />
 
-          {/* =================================================
-              YELLOW DECORATIVE BLOB
-          ================================================== */}
-
+          {/* Yellow decoration */}
           <motion.div
             aria-hidden
             className="
@@ -253,10 +216,7 @@ export default function CTA() {
             }}
           />
 
-          {/* =================================================
-              MINT DECORATIVE BLOB
-          ================================================== */}
-
+          {/* Mint decoration */}
           <motion.div
             aria-hidden
             className="
@@ -286,10 +246,7 @@ export default function CTA() {
             }}
           />
 
-          {/* =================================================
-              BADGE
-          ================================================== */}
-
+          {/* Badge */}
           <motion.div
             initial={{
               opacity: 0,
@@ -332,18 +289,11 @@ export default function CTA() {
               sm:text-base
             "
           >
-            <Sparkles
-              className="h-4 w-4"
-              strokeWidth={2.8}
-            />
-
+            <Sparkles className="h-4 w-4" strokeWidth={2.8} />
             Ready to convert?
           </motion.div>
 
-          {/* =================================================
-              HEADING
-          ================================================== */}
-
+          {/* Heading */}
           <motion.h2
             initial={{
               opacity: 0,
@@ -396,7 +346,6 @@ export default function CTA() {
                 transition={{
                   delay: 0.8,
                   duration: 0.5,
-                  ease: "easeOut",
                 }}
                 className="
                   absolute
@@ -413,10 +362,7 @@ export default function CTA() {
             </span>
           </motion.h2>
 
-          {/* =================================================
-              DESCRIPTION
-          ================================================== */}
-
+          {/* Description */}
           <motion.p
             initial={{
               opacity: 0,
@@ -450,10 +396,7 @@ export default function CTA() {
             get accurate answers without the complicated setup.
           </motion.p>
 
-          {/* =================================================
-              CTA BUTTON
-          ================================================== */}
-
+          {/* CTA */}
           <motion.div
             initial={{
               opacity: 0,
@@ -476,23 +419,8 @@ export default function CTA() {
             }}
             className="relative z-10 mt-9"
           >
-            <motion.a
-              href="#converters"
-              whileHover={{
-                y: -6,
-                rotate: -1,
-                boxShadow:
-                  "8px 8px 0px rgba(26,26,26,0.9)",
-                transition: {
-                  duration: 0.18,
-                },
-              }}
-              whileTap={{
-                y: 3,
-                x: 3,
-                boxShadow:
-                  "2px 2px 0px rgba(26,26,26,0.9)",
-              }}
+            <Link
+              to="/dashboard#converters"
               className="
                 inline-flex
                 items-center
@@ -507,6 +435,12 @@ export default function CTA() {
                 font-bold
                 text-white
                 shadow-[6px_6px_0px_rgba(26,26,26,0.9)]
+                transition-transform
+                hover:-translate-y-1
+                hover:shadow-[8px_8px_0px_rgba(26,26,26,0.9)]
+                active:translate-x-[3px]
+                active:translate-y-[3px]
+                active:shadow-[2px_2px_0px_rgba(26,26,26,0.9)]
                 sm:px-9
                 sm:py-4
                 sm:text-lg
@@ -524,17 +458,12 @@ export default function CTA() {
                 className="h-5 w-5"
                 strokeWidth={2.8}
               />
-            </motion.a>
+            </Link>
           </motion.div>
 
-          {/* =================================================
-              MICRO COPY
-          ================================================== */}
-
+          {/* Micro copy */}
           <motion.div
-            initial={{
-              opacity: 0,
-            }}
+            initial={{ opacity: 0 }}
             animate={
               inView
                 ? {

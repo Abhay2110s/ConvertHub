@@ -7,10 +7,13 @@ export function calculate(type, inputs) {
     emi: () => import("../calculators/finance/emi"),
     loan: () => import("../calculators/finance/loan"),
     compoundInterest: () => import("../calculators/finance/compoundInterest"),
+    simpleInterest: () => import("../calculators/finance/simpleInterest"),
+    percentage: () => import("../calculators/finance/percentage"),
+    profitLoss: () => import("../calculators/finance/profitLoss"),
     sip: () => import("../calculators/finance/sip")
   };
 
   const engine = engines[type];
   if (!engine) throw new Error(`Unknown finance calculator: ${type}`);
-  return engine().then((mod) => mod.default(inputs));
+  return engine().then((mod) => mod.default(...inputs));
 }
