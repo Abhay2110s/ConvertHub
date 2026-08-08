@@ -6,7 +6,37 @@ The project is designed to make common calculations **fast, simple, and accessib
 
 ## 🌐 Live Demo
 
-👉 https://convert-hub-12.vercel.app/
+👉 [https://convert-hub-12.vercel.app/](https://convert-hub-12.vercel.app/)
+
+---
+
+## 📸 Screenshots
+
+### 🏠 Hero / Landing Page
+
+The landing page introduces ConvertHub with a bold, playful interface and a clear call-to-action for starting a conversion.
+
+![ConvertHub Hero Page](./screenshots/01-hero.png)
+
+### 📊 Dashboard
+
+The dashboard provides quick access to the main calculator categories and highlights the core ConvertHub toolbox.
+
+![ConvertHub Dashboard](./screenshots/02-dashboard.png)
+
+### 🗂️ Categories
+
+ConvertHub organizes its tools into clear categories including Unit Conversion, Finance, Date & Time, and Everyday utilities.
+
+![ConvertHub Categories](./screenshots/03-categories.png)
+
+### 📅 Date & Time Tools
+
+The Date & Time category provides tools such as the Age Calculator, Date Difference Calculator, and Business Days Calculator.
+
+![ConvertHub Date and Time Tools](./screenshots/04-date-time-tools.png)
+
+---
 
 ## ✨ Features
 
@@ -14,50 +44,50 @@ The project is designed to make common calculations **fast, simple, and accessib
 
 Convert between commonly used units such as:
 
-* Length
-* Weight
-* Area
-* Volume
-* Speed
-* Temperature
-* Pressure
-* Force
-* Torque
-* Density
-* Energy
-* Power
-* Frequency
-* Fuel Consumption
+- Length
+- Weight
+- Area
+- Volume
+- Speed
+- Temperature
+- Pressure
+- Force
+- Torque
+- Density
+- Energy
+- Power
+- Frequency
+- Fuel Consumption
 
 ### 💰 Finance Calculators
 
-* Percentage Calculator
-* Simple Interest Calculator
-* Compound Interest Calculator
-* Profit & Loss Calculator
-* Discount Calculator
-* GST Calculator
-* Tax Calculator
-* EMI Calculator
-* Loan Calculator
-* SIP Calculator
-* Currency Converter
+- Percentage Calculator
+- Simple Interest Calculator
+- Compound Interest Calculator
+- Profit & Loss Calculator
+- Discount Calculator
+- GST Calculator
+- Tax Calculator
+- EMI Calculator
+- Loan Calculator
+- SIP Calculator
+- Currency Converter
 
 ### 📅 Date & Time Tools
 
-* Age Calculator
-* Date Difference Calculator
-* Business Days Calculator
-* Countdown Timer
-* Timezone Converter
+- Age Calculator
+- Date Difference Calculator
+- Business Days Calculator
+- Countdown Timer
+- Timezone Converter
 
 ### 🌡️ Everyday Calculators
 
-* BMI Calculator
-* Calorie Calculator
-* Cooking Converter
-* Clothing Size Converter
-* Shoe Size Converter
+- BMI Calculator
+- Calorie Calculator
+- Cooking Converter
+- Clothing Size Converter
+- Shoe Size Converter
 
 ## 🎨 UI & Design
 
@@ -67,49 +97,49 @@ ConvertHub focuses on a simple and user-friendly interface.
 
 The application is designed to work across:
 
-* 📱 Mobile
-* 📲 Tablet
-* 💻 Desktop
+- 📱 Mobile
+- 📲 Tablet
+- 💻 Desktop
 
 The layouts automatically adapt to different screen sizes for a consistent experience.
 
 ### 🎯 Design Features
 
-* Clean and modern interface
-* Bold visual style
-* Responsive layouts
-* Interactive animations
-* Easy-to-use input fields
-* Clear calculation results
-* Category-based organization
-* Searchable toolbox
-* Mobile-friendly navigation
+- Clean and modern interface
+- Bold visual style
+- Responsive layouts
+- Interactive animations
+- Easy-to-use input fields
+- Clear calculation results
+- Category-based organization
+- Searchable toolbox
+- Mobile-friendly navigation
 
 ## 🛠️ Tech Stack
 
 ### Frontend
 
-* ⚛️ React
-* 🟨 JavaScript
-* 🎨 Tailwind CSS
-* 🎬 Framer Motion
-* 🧭 React Router
-* 🎯 Lucide React
+- ⚛️ React
+- 🟨 JavaScript
+- 🎨 Tailwind CSS
+- 🎬 Framer Motion
+- 🧭 React Router
+- 🎯 Lucide React
 
 ### Backend
 
-* 🟢 Node.js
-* 🚂 Express.js
-* 🔌 REST APIs
-* 🌐 CORS
-* ⏱️ Rate Limiting
+- 🟢 Node.js
+- 🚂 Express.js
+- 🔌 REST APIs
+- 🌐 CORS
+- ⏱️ Rate Limiting
 
 ### External APIs
 
 ConvertHub uses external services for live data such as:
 
-* 💱 Currency exchange rates
-* 🌍 Time and timezone information
+- 💱 Currency exchange rates
+- 🌍 Time and timezone information
 
 ## 📂 Project Structure
 
@@ -136,6 +166,12 @@ ConvertHub/
 │   ├── server.js
 │   ├── package.json
 │   └── .env
+│
+├── screenshots/
+│   ├── 01-hero.png
+│   ├── 02-dashboard.png
+│   ├── 03-categories.png
+│   └── 04-date-time-tools.png
 │
 └── README.md
 ```
@@ -317,33 +353,33 @@ After changing environment variables on Vercel, redeploy the affected project so
 
 Building ConvertHub helped me gain practical experience with:
 
-* ⚛️ React application architecture
-* 🧩 Reusable components
-* 🧭 Client-side routing
-* 🎨 Responsive UI development
-* 🔌 REST API integration
-* 🖥️ Node.js backend development
-* 🌐 CORS configuration
-* 🔐 Environment variables
-* ⏱️ API rate limiting
-* 🚀 Vercel deployment
-* 🔗 Connecting frontend and backend services
-* 📱 Responsive design across devices
+- ⚛️ React application architecture
+- 🧩 Reusable components
+- 🧭 Client-side routing
+- 🎨 Responsive UI development
+- 🔌 REST API integration
+- 🖥️ Node.js backend development
+- 🌐 CORS configuration
+- 🔐 Environment variables
+- ⏱️ API rate limiting
+- 🚀 Vercel deployment
+- 🔗 Connecting frontend and backend services
+- 📱 Responsive design across devices
 
 ## 🔮 Future Improvements
 
 Some features planned for future versions:
 
-* ➕ More unit conversions
-* 💰 More financial calculators
-* 📊 Calculation history
-* ⭐ Favorite tools
-* 🔍 Improved search
-* 🌙 Dark mode
-* 📤 Share calculation results
-* 📱 Improved mobile experience
-* 🌍 More currencies and timezones
-* ⚡ Performance improvements
+- ➕ More unit conversions
+- 💰 More financial calculators
+- 📊 Calculation history
+- ⭐ Favorite tools
+- 🔍 Improved search
+- 🌙 Dark mode
+- 📤 Share calculation results
+- 📱 Improved mobile experience
+- 🌍 More currencies and timezones
+- ⚡ Performance improvements
 
 ## 🤝 Contributing
 
