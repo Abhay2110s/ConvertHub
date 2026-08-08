@@ -1,4 +1,4 @@
-import { withApi } from "../../lib/handler.js";
+import { withApi } from "../../lib/middleware.js";
 import { getCurrentTime } from "../../lib/timeService.js";
 
 // GET /api/time/current?timezone=Asia/Kolkata

@@ -1,4 +1,4 @@
-import { withApi } from "../lib/handler.js";
+import { withApi } from "../lib/middleware.js";
 
 export default withApi(async (req, res) => {
   res.status(200).json({

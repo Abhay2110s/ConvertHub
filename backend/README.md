@@ -77,13 +77,12 @@ backend/
       timezones.js
       convert.js
   lib/
-    cors.js          # CORS headers + preflight handling
-    cache.js          # best-effort in-memory TTL cache
-    http.js            # fetch-with-timeout + upstream error handling
-    rateLimit.js         # best-effort in-memory rate limiting
-    handler.js             # shared wrapper: CORS + rate limit + errors
-    currencyService.js       # Frankfurter integration
-    timeService.js             # Time.now integration + Intl fallback
+    middleware.js       # CORS, rate limiting, method guard, error formatting
+                         # (everything about wrapping a request)
+    external.js         # fetch-with-timeout + in-memory caching
+                         # (everything about calling a third-party API)
+    currencyService.js  # Frankfurter integration - the currency business logic
+    timeService.js       # Time.now integration + Intl fallback - the time business logic
   server.js       # local-only HTTP server; imports api/**/*.js directly
   package.json
   vercel.json
@@ -93,6 +92,13 @@ Every route in `api/` is picked up by Vercel automatically as its own
 serverless function in production — there's no framework/router to
 configure there. `server.js` (used only for local dev, see below) is the
 one exception: it's a thin adapter, not a route file, so Vercel ignores it.
+
+**The request flow is always the same four steps:** a route file in `api/`
+wraps itself in `withApi()` from `lib/middleware.js` (CORS + rate limit +
+error handling), reads the query params, calls into `currencyService.js`
+or `timeService.js` for the actual logic, which in turn uses
+`lib/external.js` to call the upstream API with caching. Route files never
+talk to `fetch` or the cache directly - that's what the services are for.
 
 ## Local development
 

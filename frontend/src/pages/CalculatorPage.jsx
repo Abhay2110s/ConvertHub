@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowRight, RefreshCcw, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,6 +8,7 @@ import { calculate as calculateDate } from "../engines/dateEngine";
 import { calculate as calculateEveryday } from "../engines/everydayEngine";
 import CalculatorLayout from "../components/calculator/CalculatorLayout";
 import { formatNumber } from "../utils/formatter";
+import { apiGet } from "../api/client";
 
 const UNIT_OPTIONS = {
   length:[["meter","Meter"],["kilometer","Kilometer"],["centimeter","Centimeter"],["millimeter","Millimeter"],["mile","Mile"],["yard","Yard"],["foot","Foot"],["inch","Inch"]],
@@ -26,7 +27,23 @@ const UNIT_OPTIONS = {
   fuelConsumption:[["kmPerLiter","km/L"],["milesPerGallon","MPG"],["litersPer100km","L/100 km"]]
 };
 
-const CURRENCY_OPTIONS = [["USD","US Dollar"],["EUR","Euro"],["GBP","British Pound"],["INR","Indian Rupee"],["JPY","Japanese Yen"],["AUD","Australian Dollar"],["CAD","Canadian Dollar"]];
+// Every currency the backend can actually convert (ECB reference rates,
+// via Frankfurter) - used as the instant default so the dropdown isn't
+// empty on first paint. CalculatorPage fetches the live list from
+// /api/currency/currencies on mount and swaps in anything the backend
+// adds later, so this never needs to be hand-maintained again.
+const DEFAULT_CURRENCY_OPTIONS = [
+  ["USD","US Dollar"],["EUR","Euro"],["GBP","British Pound"],["INR","Indian Rupee"],
+  ["JPY","Japanese Yen"],["AUD","Australian Dollar"],["CAD","Canadian Dollar"],
+  ["CHF","Swiss Franc"],["CNY","Chinese Yuan"],["HKD","Hong Kong Dollar"],
+  ["SGD","Singapore Dollar"],["NZD","New Zealand Dollar"],["KRW","South Korean Won"],
+  ["MXN","Mexican Peso"],["BRL","Brazilian Real"],["ZAR","South African Rand"],
+  ["SEK","Swedish Krona"],["NOK","Norwegian Krone"],["DKK","Danish Krone"],
+  ["PLN","Polish Zloty"],["CZK","Czech Koruna"],["HUF","Hungarian Forint"],
+  ["RON","Romanian Leu"],["BGN","Bulgarian Lev"],["ISK","Icelandic Krona"],
+  ["TRY","Turkish Lira"],["ILS","Israeli Shekel"],["THB","Thai Baht"],
+  ["MYR","Malaysian Ringgit"],["IDR","Indonesian Rupiah"],["PHP","Philippine Peso"]
+];
 
 const CONFIG = {
   length:["Length Converter","Convert length units precisely.","unit"],
@@ -146,9 +163,25 @@ export default function CalculatorPage() {
   const [values,setValues]=useState({});
   const [result,setResult]=useState(null);
   const [error,setError]=useState("");
+  const [currencyOptions,setCurrencyOptions]=useState(DEFAULT_CURRENCY_OPTIONS);
   const units=UNIT_OPTIONS[type];
   const set=(key,value)=>setValues(v=>({...v,[key]:value}));
   const defaults=useMemo(()=>({from:units?.[0]?.[0]??"",to:units?.[1]?.[0]??units?.[0]?.[0]??""}),[type]);
+
+  useEffect(()=>{
+    if (type!=="currency") return;
+    let isMounted=true;
+    apiGet("currency/currencies").then(data=>{
+      if (!isMounted) return;
+      const options=Object.entries(data.currencies||{});
+      if (options.length) setCurrencyOptions(options.sort((a,b)=>a[1].localeCompare(b[1])));
+    }).catch(()=>{
+      // Backend unreachable - keep the built-in default list so the
+      // dropdown still works, live rates just won't include anything
+      // added to the API since this list was last updated.
+    });
+    return ()=>{isMounted=false;};
+  },[type]);
 
   if (!config) return <CalculatorLayout title="Calculator Not Found" description="That tool is not configured yet."><Link to="/dashboard" className="inline-flex border-[3px] border-black bg-[#FDE047] px-4 py-2 font-black shadow-[3px_3px_0px_#000]">Back to Dashboard</Link></CalculatorLayout>;
 
@@ -170,10 +203,8 @@ export default function CalculatorPage() {
       else if (["discount","gst","tax"].includes(type)) output=await calculateFinance(type,[num(values.amount,"Amount"),num(values.rate,"Rate")]);
       else if (type==="emi"||type==="loan") output=await calculateFinance(type,[num(values.principal,"Principal"),num(values.rate,"Rate"),num(values.tenure,"Tenure")]);
       else if (type==="sip") output=await calculateFinance(type,[num(values.monthly,"Monthly Investment"),num(values.rate,"Rate"),num(values.time,"Time")]);
-      else if (type==="currency") {
-        const rates={USD:1,EUR:.92,GBP:.79,INR:83.5,JPY:149.5,AUD:1.52,CAD:1.36};
-        output=await calculateFinance(type,[num(values.amount,"Amount"),values.fromCurrency||"USD",values.toCurrency||"INR",rates]);
-      } else if (type==="age") output=await calculateDate(type,[values.birth,values.asOf||new Date().toISOString().slice(0,10)]);
+      else if (type==="currency") output=await calculateFinance(type,[num(values.amount,"Amount"),values.fromCurrency||"USD",values.toCurrency||"INR"]);
+      else if (type==="age") output=await calculateDate(type,[values.birth,values.asOf||new Date().toISOString().slice(0,10)]);
       else if (type==="dateDifference"||type==="businessDays") output=await calculateDate(type,[values.start,values.end]);
       else if (type==="countdown") output=await calculateDate(type,[values.target]);
       else if (type==="timezone") output=await calculateDate(type,[values.dateTime,values.fromZone||"UTC",values.toZone||"Asia/Kolkata"]);
@@ -199,7 +230,7 @@ export default function CalculatorPage() {
       case "emi": return <div className="grid gap-5 sm:grid-cols-3"><Field label="Principal" value={values.principal} onChange={v=>set("principal",v)}/><Field label="Annual Rate %" value={values.rate} onChange={v=>set("rate",v)}/><Field label="Tenure (months)" value={values.tenure} onChange={v=>set("tenure",v)}/></div>;
       case "loan": return <div className="grid gap-5 sm:grid-cols-3"><Field label="Principal" value={values.principal} onChange={v=>set("principal",v)}/><Field label="Annual Rate %" value={values.rate} onChange={v=>set("rate",v)}/><Field label="Tenure (years)" value={values.tenure} onChange={v=>set("tenure",v)}/></div>;
       case "sip": return <div className="grid gap-5 sm:grid-cols-3"><Field label="Monthly Investment" value={values.monthly} onChange={v=>set("monthly",v)}/><Field label="Expected Return %" value={values.rate} onChange={v=>set("rate",v)}/><Field label="Time (years)" value={values.time} onChange={v=>set("time",v)}/></div>;
-      case "currency": return <div className="grid gap-5 sm:grid-cols-3"><Field label="Amount" value={values.amount} onChange={v=>set("amount",v)}/><SelectField label="From" value={values.fromCurrency||"USD"} onChange={v=>set("fromCurrency",v)} options={CURRENCY_OPTIONS}/><SelectField label="To" value={values.toCurrency||"INR"} onChange={v=>set("toCurrency",v)} options={CURRENCY_OPTIONS}/></div>;
+      case "currency": return <div className="grid gap-5 sm:grid-cols-3"><Field label="Amount" value={values.amount} onChange={v=>set("amount",v)}/><SelectField label="From" value={values.fromCurrency||"USD"} onChange={v=>set("fromCurrency",v)} options={currencyOptions}/><SelectField label="To" value={values.toCurrency||"INR"} onChange={v=>set("toCurrency",v)} options={currencyOptions}/></div>;
       case "age": return <div className="grid gap-5 sm:grid-cols-2"><DateField label="Birth Date" value={values.birth} onChange={v=>set("birth",v)}/><DateField label="Calculate As Of (optional)" value={values.asOf} onChange={v=>set("asOf",v)}/></div>;
       case "dateDifference": case "businessDays": return <div className="grid gap-5 sm:grid-cols-2"><DateField label="Start Date" value={values.start} onChange={v=>set("start",v)}/><DateField label="End Date" value={values.end} onChange={v=>set("end",v)}/></div>;
       case "countdown": return <DateField label="Target Date & Time" value={values.target} onChange={v=>set("target",v)} dateTime/>;

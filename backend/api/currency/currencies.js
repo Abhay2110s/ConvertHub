@@ -1,4 +1,4 @@
-import { withApi } from "../../lib/handler.js";
+import { withApi } from "../../lib/middleware.js";
 import { getSupportedCurrencies } from "../../lib/currencyService.js";
 
 // GET /api/currency/currencies

@@ -1,4 +1,4 @@
-import { withApi, BadRequestError } from "../../lib/handler.js";
+import { withApi, BadRequestError } from "../../lib/middleware.js";
 import { convertCurrency } from "../../lib/currencyService.js";
 
 // GET /api/currency/convert?amount=100&from=USD&to=INR

@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Real env values - only .env.example should be committed.
+# Set VITE_API_BASE_URL in the Vercel project's dashboard instead.
+.env
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

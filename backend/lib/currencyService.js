@@ -1,6 +1,5 @@
-import { fetchJson } from "./http.js";
-import { cached } from "./cache.js";
-import { BadRequestError } from "./handler.js";
+import { fetchJson, cached } from "./external.js";
+import { BadRequestError } from "./middleware.js";
 
 // Frankfurter is a free, open-source exchange rate API backed by the
 // European Central Bank. No API key, no account, no rate limit.

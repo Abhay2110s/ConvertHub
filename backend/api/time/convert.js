@@ -1,4 +1,4 @@
-import { withApi, BadRequestError } from "../../lib/handler.js";
+import { withApi, BadRequestError } from "../../lib/middleware.js";
 import { convertBetweenTimeZones } from "../../lib/timeService.js";
 
 // GET /api/time/convert?dateTime=2026-08-08T10:00&from=Asia/Kolkata&to=America/New_York

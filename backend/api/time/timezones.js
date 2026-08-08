@@ -1,4 +1,4 @@
-import { withApi } from "../../lib/handler.js";
+import { withApi } from "../../lib/middleware.js";
 import { getAllTimeZones } from "../../lib/timeService.js";
 
 // GET /api/time/timezones

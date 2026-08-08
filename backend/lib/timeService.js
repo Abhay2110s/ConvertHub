@@ -1,6 +1,5 @@
-import { fetchJson, UpstreamError } from "./http.js";
-import { cached } from "./cache.js";
-import { BadRequestError } from "./handler.js";
+import { fetchJson, cached, UpstreamError } from "./external.js";
+import { BadRequestError } from "./middleware.js";
 
 // Time.now's World Time API: free, no API key, CORS enabled.
 // Docs: https://time.now/developer
