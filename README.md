@@ -11,7 +11,6 @@ The project is designed to make common calculations **fast, simple, and accessib
 ---
 
 ## 📸 Screenshots
-
 ### 🏠 Hero / Landing Page
 
 The landing page introduces ConvertHub with a bold, playful interface and a clear call-to-action for starting a conversion.
@@ -37,6 +36,7 @@ The Date & Time category provides tools such as the Age Calculator, Date Differe
 ![ConvertHub Date and Time Tools](./screenshots/04-date-time-tools.png)
 
 ---
+
 
 ## ✨ Features
 
